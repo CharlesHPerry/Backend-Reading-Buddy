@@ -10,6 +10,7 @@ const app = express()
 //TODO: require routes for Books, User-experience etc...
 const users = require('./routes/users')
 const userExperiences = require('./routes/UserExperiences');
+const books = require('./routes/books');
 
 //middleware for CORS requests
 app.use(function(req, res, next) {
@@ -41,6 +42,7 @@ app.use(passport.initialize())
 //setup routes
 //app.use('/users', users)
 app.use('/UserExperiences', userExperiences);
+app.use("/books", books);
 
 //start server
 app.listen(process.env.PORT || 3001, () => console.log(`Server is running on ${process.env.PORT} and things are smooth`))

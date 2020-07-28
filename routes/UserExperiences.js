@@ -11,7 +11,6 @@ router.post('/', (req,res) => {     // assumes req.body structure of {bookInfo: 
 
     const createUserExperience = (bookId) => {    // will be called later in the route, depending on whether the relevant Book is found or created
         req.body.userExperienceInfo.bookId = bookId;
-
         UserExperience.create(req.body.userExperienceInfo) 
         // may want to refactor later to make sure bookId&userId combo is unique, so that user doesn't accidentally review the same book twice
         .then(createdUserExperience => {
@@ -34,9 +33,9 @@ router.post('/', (req,res) => {     // assumes req.body structure of {bookInfo: 
         })
     }
 
-    //Look for book with same title as new userExperience's book.  If it doesn't exist, create it.  Return its id here,
+    //Look for book with same api_id as new userExperience's book.  If it doesn't exist, create it.  Return its id here,
     //then create the new userExperience, then update the Book with the experience's ID, then associate the User with the experience, using the above function.
-    Book.findOne({title: req.body.bookInfo.title})
+    Book.findOne({api_id: req.body.bookInfo.api_id})
         .select("_id")
         .then(foundBook => {
             if (foundBook){
