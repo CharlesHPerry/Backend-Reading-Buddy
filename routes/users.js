@@ -9,7 +9,7 @@ const passport = require('passport')
 // load User model
 const User = require('../models/User')
 const Book = require('../models/Book')
-const UserExperience = require('../models/UserExperience')
+const ReaderExperience = require('../models/ReaderExperience')
 
 //API ROUTES
 //user test route
@@ -17,17 +17,28 @@ router.get('/test', function(req, res) {
     res.json({msg: "Users route working"})
 })
 //Get a user by id for profiles
-router.get('/user/:id', (req, res) => {
-    User.findById({ id: req.params.id })
+router.get('/:id', (req, res) => {
+    User.findOne({_id: req.params.id})
+        .populate({
+            path: 'readerExperiences',
+            populate: 'book'
+        })
         .then(user => {
-            Book.find({ userId: user.id })
+            res.send({user})
+        })
+        .catch(err => {
+            res.send({error: `Error getting user: ${err}`});
+        })    
+    /*  old version
+        .then(user => {        
+              Book.find({ userId: user.id })
                 .then(userBooks => {
-                    UserExperience.find({ userId: user.id})
-                        .then(foundUserExperience => {
-                            res.send({user}, {userBooks}, {foundUserExperience})
+                    ReaderExperience.find({ userId: user.id})
+                        .then(foundReaderExperience => {
+                            res.send({user}, {userBooks}, {foundReaderExperience})
                         })
                         .catch(err => {
-                            console.log(`Error finding UserExperiences: ${err}`)
+                            console.log(`Error finding ReaderExperiences: ${err}`)
                         })
                 })
                 .catch(err => {
@@ -36,6 +47,17 @@ router.get('/user/:id', (req, res) => {
         })
         .catch(err => {
             console.log(`Error finding User: ${err}`)
+        })
+        */
+})
+
+router.get('/', (req,res) => {
+    User.find(req.query)
+        .then(searchResults => {
+            res.send({searchResults})
+        })
+        .catch(err => {
+            res.send({error: `Error searching user names: ${err}`})
         })
 })
 

@@ -23,8 +23,14 @@ const UserSchema = new Schema({
       type: String,
       required: true,
     },
-    userExperiences: Array,
-    friends: Array,
+    readerExperiences:  [{
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: "ReaderExperience"
+    }],
+    friends: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    }],
     date: {
       type: Date,
       default: Date.now
