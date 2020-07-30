@@ -9,7 +9,7 @@ const app = express()
 //require routers here:
 //TODO: require routes for Books, User-experience etc...
 const users = require('./routes/users')
-const readerExperiences = require('./routes/readerExperiences');
+const readerExperiences = require('./routes/ReaderExperiences');
 const books = require('./routes/books');
 
 //middleware for CORS requests
@@ -19,14 +19,15 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
     next()
 })
-
+console.log('butts butts')
 //bodyParser middleware
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
-const uri = process.env.MONGOD_URI
+//connect mongo db
+const uri = process.env.MONGODB_URI
+//connect Mongodb
 
-// connect to db
 const MongoClient = require('mongodb').MongoClient;
 const client = new MongoClient(uri, { useNewUrlParser: true });
 client.connect(err => {
@@ -34,9 +35,14 @@ client.connect(err => {
   // perform actions on the collection object
   client.close();
 });
+mongoose.connect(uri)
+    .then(() => console.log('MongoDB connected... ✅'))
+    .catch(err => console.log(err))
 
-mongoose.connect(uri).then((() => console.log('MONGOOSE CONNECTED'))).catch(error => console.log(error))
-
+//test route
+app.get('/', function(req, res) {
+    res.send('Hello lovely person!\n Server is up and running')
+})
 
 app.use(passport.initialize())
 //TODO: make config folder and passport page
