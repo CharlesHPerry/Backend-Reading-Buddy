@@ -25,9 +25,17 @@ app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
 //connect mongo db
-const db = process.env.MONGODB_URI
+const uri = process.env.MONGODB_URI
 //connect Mongodb
-mongoose.connect(db)
+
+const MongoClient = require('mongodb').MongoClient;
+const client = new MongoClient(uri, { useNewUrlParser: true });
+client.connect(err => {
+  const collection = client.db("test").collection("devices");
+  // perform actions on the collection object
+  client.close();
+});
+mongoose.connect(uri)
     .then(() => console.log('MongoDB connected... ✅'))
     .catch(err => console.log(err))
 
