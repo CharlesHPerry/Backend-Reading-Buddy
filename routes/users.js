@@ -61,6 +61,38 @@ router.get('/', (req,res) => {
         })
 })
 
+router.put('/:id/update', (req,res) => {
+    if (req.query.remove) { // if we are removing a friend, PULL from friend list
+        User.findOneAndUpdate({_id: req.params.id}, {$pull: {friends: req.body.friendId}})
+            .then(updateResponse => {
+                User.findOneAndUpdate({_id: req.body.friendId}, {$pull: {friends: req.params.id}})
+                    .then(nextUpdateResponse => {
+                        res.send({updateResponse})
+                    })
+                    .catch(error => {
+                        res.send({error: `Error adding user to friend's friend list`})
+                    })
+            })
+            .catch(error => {
+                res.send({error: `Error adding friend to user's friend list: ${err}`});
+            })
+    } else { // if we are adding a friend, PUSH to friend list
+        User.findOneAndUpdate({_id: req.params.id}, {$push: {friends: req.body.friendId}})
+        .then(updateResponse => {
+            User.findOneAndUpdate({_id: req.body.friendId}, {$push: {friends: req.params.id}})
+                .then(nextUpdateResponse => {
+                    res.send({updateResponse})
+                })
+                .catch(error => {
+                    res.send({error: `Error adding user to friend's friend list`})
+                })
+        })
+        .catch(error => {
+            res.send({error: `Error adding friend to user's friend list: ${err}`});
+        })
+    }
+})
+
 
 //GET route to handle registration
 router.post('/register', (req, res) => {

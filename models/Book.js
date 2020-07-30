@@ -25,12 +25,7 @@ const BookSchema = new Schema({
     readerExperiences: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "ReaderExperiences"
-    }],
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true
-    }
+    }]
 })
 
 module.exports = Book = mongoose.model('Book', BookSchema)

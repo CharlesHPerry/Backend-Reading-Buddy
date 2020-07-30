@@ -13,6 +13,11 @@ router.get("/:api_id", (req,res) => {
             booksInfo.forEach(book => {
                 readerExperiencesInfo.concat(book.readerExperiences);
             })
+            readerExperiencesInfo.forEach((experience, index) => {
+                if (!experience.rating && !experience.review) {
+                    readerExperiencesInfo.splice(index, 1);
+                }
+            })
             res.send({readerExperiencesInfo});
         })
         .catch(err => {
