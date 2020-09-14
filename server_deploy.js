@@ -9,7 +9,7 @@ const app = express()
 
 //require routers here:
 //TODO: require routes for Books, User-experience etc...
-const users = require('./routes/users');
+const users = require('./routes/users')
 const books = require('./routes/books');
 const readerExperiences = require('./routes/readerexperiences');
 
@@ -25,7 +25,7 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
     next()
 })
-console.log('butts butts')
+
 //bodyParser middleware
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
@@ -33,6 +33,7 @@ app.use(bodyParser.json())
 const uri = process.env.MONGOD_URI
 const uri_deploy = process.env.MONGOD_URI4
 
+// connect to db
 const MongoClient = require('mongodb').MongoClient;
 const client = new MongoClient(uri_deploy, { useNewUrlParser: true });
 client.connect(err => {
@@ -40,9 +41,6 @@ client.connect(err => {
   // perform actions on the collection object
   client.close();
 });
-mongoose.connect(uri)
-    .then(() => console.log('MongoDB connected... ✅'))
-    .catch(err => console.log(err))
 
 mongoose.connect(uri_deploy).then((() => console.log('MONGOOSE CONNECTED'))).catch(error => console.log(error))
 
